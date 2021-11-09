@@ -140,7 +140,7 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
 # MAIN PROGRAM
 #############################################################
 if __name__ == '__main__':
-    senders = get_senders('../inputs/from.txt')
+    senders = get_senders('../inputs/credentials.txt')
     receivers = get_receivers('../inputs/to.txt')
     mails = get_mails('../inputs/emails')
     for receiver in receivers:
