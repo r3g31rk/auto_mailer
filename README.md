@@ -21,7 +21,7 @@ Inside the folder _[inputs](inputs)_ you must create a file named _credentials.t
 TLDR: Each text file from _[inputs/emails](inputs/emails)_ will be sent to each address in _[inputs/recipients.txt](inputs/recipients.txt)_ using a random address from _inputs/credentials.txt_.  
 
 ### FROM WHO
-- You must provide, inside the file _inputs/credentials.txt_: the account[s] **FROM** which you want to send a message.  
+- You must provide, inside the recently created file _inputs/credentials.txt_: the account[s] **FROM** which you want to send some email[s].  
 - Two values _login;password_ per line, separated by a semicolon `;`.  
 - The program will randomly used one of the provided account to send the emails.  
 - Provide only one account credntials if you do not want randomness.  
@@ -37,7 +37,7 @@ TLDR: Each text file from _[inputs/emails](inputs/emails)_ will be sent to each 
 
 
 ### TO WHO
-- You must provide, inside the file _[inputs/recipients.txt](inputs/recipients.txt)_, the account[s] **TO** which you want to send a message. 
+- You must provide, inside the file _[inputs/recipients.txt](inputs/recipients.txt)_, the account[s] **TO** which you want to send some email[s]. 
 - One email address per line.  
 - Your file should look like something like this:  
     ```text
@@ -48,7 +48,7 @@ TLDR: Each text file from _[inputs/emails](inputs/emails)_ will be sent to each 
     ```
 
 ### ABOUT WHAT
-- You must provide, inside the folder _[inputs/emails/](inputs/emails)_, some text file(s).  
-- The NAME of each text file will be used as the email SUBJECT.  
-- The CONTENT of each text file will be used as the email MESSAGE.  
+- You must provide, inside the folder _[inputs/emails/](inputs/emails)_, some text file[s] containg some email[s].  
+- The **name** (without the `.txt` extension) of each text file will be used as the email **subject**.  
+- The **content** of each text file will be used as the email **message**.  
 - Each text file contained in the folder _[inputs/emails/](inputs/emails)_ will be sent to EACH recipient from the the file _[inputs/recipients.txt](inputs/recipients.txt)_. 
