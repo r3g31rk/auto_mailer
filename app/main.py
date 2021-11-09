@@ -141,7 +141,7 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
 #############################################################
 if __name__ == '__main__':
     senders = get_senders('../inputs/credentials.txt')
-    receivers = get_receivers('../inputs/to.txt')
+    receivers = get_receivers('../inputs/recipients.txt')
     mails = get_mails('../inputs/emails')
     for receiver in receivers:
         login, password = choice(list(senders.items()))
@@ -154,3 +154,4 @@ if __name__ == '__main__':
     # TODO: packager le tout pour utiliser from everywhere
 
 # TODO: test it under windows OS
+# TODO: cook the recipees for mailing with gmail which should be the most used**
