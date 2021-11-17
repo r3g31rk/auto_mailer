@@ -147,11 +147,11 @@ if __name__ == '__main__':
         login, password = choice(list(senders.items()))
         for mail in mails:
             subject, message = mail[0], mail[1]
-            # send_protonmail(login, password, receiver, subject, message)
-            print(f'#'* 42 + f'\nfrom:{login}\tto:{receiver}\tabout:{subject}\n{message}')
-    #     os.remove('geckodriver.log')
-    # TODO: proper logging and cleaning of useless logs
-    # TODO: packager le tout pour utiliser from everywhere
+            send_protonmail(login, password, receiver, subject, message)
+            print(f'#'* 42 + f'\nfrom:{login}\tto:{receiver}\tabout:{subject}  -->  SENT')
+    os.remove('geckodriver.log')
+    # TODO: proper logging and cleaning of useless log
 
-# TODO: test it under windows OS
+# TODO: package it/ freeze it to use from windows
+# TODO: test it under windows
 # TODO: cook the recipees for mailing with gmail which should be the most used**

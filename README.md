@@ -1,6 +1,6 @@
 # auto_mailer
 
-Automated email sender built with Python
+Automated email sender (from a protonmail account only) built with Python
 
 # Requirements & dependencies
 
@@ -29,7 +29,7 @@ TLDR: Each text file from _[inputs/emails](inputs/emails)_ will be sent to each 
     ```text
     my_email@protonmail.com;admin1234
     my_second_email@protonmail.com;PreviousPasswordWasWeakButNotLIkeJohn
-    a_third_email_I_creted_for_the_occasion@protonmail.com;c0mpl!c4t"dPasswordWith$tr4ngeCharacters!§
+    a_third_email_I_created_for_the_occasion@protonmail.com;c0mpl!c4t"dPasswordWith$tr4ngeCharacters!§
     ```
 
 **ONLY protonmail ACCOUNTS CAN BE USED TO SEND EMAIL FROM** (for now)
