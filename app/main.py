@@ -6,11 +6,13 @@
 ######################################################
 
 
-import os
+import os, sys
 from time import sleep
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from fake_useragent import UserAgent
 from random import randint, choice
 
@@ -93,13 +95,20 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     :param text: the message of the mail you send
     :return: zero if everything is going fine
     """
+
     # Preparing the browser
-    profile_preferences = {"http.response.timeout": 10, "dom.max_script_run_time": 10, "permissions.default.image": 2,
-                           "general.useragent.override": UserAgent().random}
-    profile = browser_set_profile(webdriver.FirefoxProfile(), profile_preferences)
-    my_options = Options()
-    my_options.headless = True  # Switch this value to display/hide the browser
-    driver = webdriver.Firefox(options=my_options, firefox_profile=profile)
+    options = webdriver.FirefoxOptions()
+    options.set_preference("http.response.timeout", 10)
+    options.set_preference('dom.max_script_run_time', 10)
+    options.set_preference('permissions.default.image', 2)
+    options.set_preference('general.useragent.override', UserAgent().random)
+    options.headless = False  # Modify this value to see/hide what is going on
+    current_working_dir = os.path.abspath(os.path.dirname(__file__))
+    driver_path = os.path.abspath(os.path.join(current_working_dir, '../resources/driver/geckodriver.exe'))
+    service = Service(driver_path)
+    driver = webdriver.Firefox(service=service, options=options)
+
+    # Connecting to the provided protonmail account
     driver.get("https://account.protonmail.com/login")
     random_sleep_time(5)
 
@@ -140,18 +149,29 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
 # MAIN PROGRAM
 #############################################################
 if __name__ == '__main__':
-    senders = get_senders('../inputs/credentials.txt')
-    receivers = get_receivers('../inputs/recipients.txt')
-    mails = get_mails('../inputs/emails')
+    # Creating the various relative path from current working directory where inputs can be fetched
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    receivers_path = os.path.abspath(os.path.join(cwd, '../inputs/receivers.txt'))
+    senders_path = os.path.abspath(os.path.join(cwd, '../inputs/credentials.txt'))
+    mails_path = os.path.abspath(os.path.join(cwd, '../inputs/emails'))
+
+    # Getting information from the inputs
+    senders = get_senders(senders_path)
+    receivers = get_receivers(receivers_path)
+    mails = get_mails(mails_path)
+
+    # Looping through each receiver provided to sent every mail provided
     for receiver in receivers:
         login, password = choice(list(senders.items()))
         for mail in mails:
             subject, message = mail[0], mail[1]
             send_protonmail(login, password, receiver, subject, message)
-            print(f'#'* 42 + f'\nfrom:{login}\tto:{receiver}\tabout:{subject}  -->  SENT')
-    os.remove('geckodriver.log')
-    # TODO: proper logging and cleaning of useless log
+            print('#' * 42 + f'\nfrom:{login}\tto:{receiver}\tabout:{subject}\n{message}_n' + '#' * 42)
+
+    # Cleaning
+    # os.remove('geckodriver.log')
+
+    # TODO: logging and/or reporting and/or warning in case of failure
 
 # TODO: package it/ freeze it to use from windows
-# TODO: test it under windows
-# TODO: cook the recipees for mailing with gmail which should be the most used**
+# TODO: cook the recipes for mailing with gmail which should be the most used**

@@ -2,20 +2,21 @@
 
 Automated email sender (from a protonmail account only) built with Python
 
-# Requirements & dependencies
+# Requirements
 
 - you need some python libs, and it easier to install them with pip
-```commandline
-sudo apt-get install python3-pip
-sudo pip3 install --upgrade pip
-sudo pip3 install selenium fake-useragent
-```
-- download the proper [geckodriver](https://github.com/mozilla/geckodriver/releases)
-- extract and put the 'geckodriver' in /usr/bin/ (and verify this directory is in your PATH)
+    - on LInux:
+    ```commandline
+    sudo pip3 install selenium fake-useragent
+    ```
+    - on Windows:
+    ```commandline
+    py -m pip install selenium fake-useragent
+    ```
 
 ##Usage
 ## Step 0: before you start
-Inside the folder _[inputs](inputs)_ you must create a file named _credentials.txt_.
+Inside the folder _[inputs](inputs)_ you **must** create a file named `credentials.txt`.
 
 ## Step 1: configuring your [inputs](inputs)
 TLDR: Each text file from _[inputs/emails](inputs/emails)_ will be sent to each address in _[inputs/recipients.txt](inputs/recipients.txt)_ using a random address from _inputs/credentials.txt_.  
