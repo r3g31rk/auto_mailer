@@ -5,16 +5,19 @@ Automated email sender (from a protonmail account only) built with Python
 # Requirements
 
 - you need some python libs, and it easier to install them with pip
-    - on LInux:
+    - what I did on LInux:
     ```commandline
     sudo pip3 install selenium fake-useragent
     ```
-    - on Windows:
+    - what I did on Windows:
     ```commandline
     py -m pip install selenium fake-useragent
     ```
 
-##Usage
+**Nota bene: These are probably not the proper ways of doing it, but it get the job done!**
+
+
+## Usage
 ## Step 0: before you start
 Inside the folder _[inputs](inputs)_ you **must** create a file named `credentials.txt`.
 
