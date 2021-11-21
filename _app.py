@@ -152,12 +152,16 @@ if __name__ == '__main__':
     # Creating the various relative path from current working directory where inputs can be fetched
     print('Creating the various relative path from current working directory where inputs can be fetched')
     cwd = os.path.abspath(os.path.dirname(__file__))
+    receivers_path1 = os.path.abspath(os.path.join(cwd, 'receivers.txt'))
     receivers_path = os.path.abspath(os.path.join(cwd, '../inputs/receivers.txt'))
     senders_path = os.path.abspath(os.path.join(cwd, '../inputs/credentials.txt'))
     mails_path = os.path.abspath(os.path.join(cwd, '../inputs/emails'))
 
     # Getting information from the inputs
     print('Getting information from the inputs')
+    receivers1 = get_receivers(receivers_path1)
+    print(receivers1)
+    sys.exit(84)
     senders = get_senders(senders_path)
     receivers = get_receivers(receivers_path)
     mails = get_mails(mails_path)
