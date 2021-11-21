@@ -150,26 +150,30 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
 #############################################################
 if __name__ == '__main__':
     # Creating the various relative path from current working directory where inputs can be fetched
+    print('Creating the various relative path from current working directory where inputs can be fetched')
     cwd = os.path.abspath(os.path.dirname(__file__))
     receivers_path = os.path.abspath(os.path.join(cwd, '../inputs/receivers.txt'))
     senders_path = os.path.abspath(os.path.join(cwd, '../inputs/credentials.txt'))
     mails_path = os.path.abspath(os.path.join(cwd, '../inputs/emails'))
 
     # Getting information from the inputs
+    print('Getting information from the inputs')
     senders = get_senders(senders_path)
     receivers = get_receivers(receivers_path)
     mails = get_mails(mails_path)
 
     # Looping through each receiver provided to sent every mail provided
+    print('Looping through each receiver provided to sent every mail provided')
     for receiver in receivers:
         login, password = choice(list(senders.items()))
         for mail in mails:
             subject, message = mail[0], mail[1]
             send_protonmail(login, password, receiver, subject, message)
-            print('#' * 42 + f'\nfrom:{login}\tto:{receiver}\tabout:{subject}\n{message}_n' + '#' * 42)
+            print('#' * 42 + f'\nMAIL SENT from:{login}\tto:{receiver}\tabout:{subject}\n{message}\n' + '#' * 42)
 
     # Cleaning
     # os.remove('geckodriver.log')
+    print('shutting down')
 
     # TODO: logging and/or reporting and/or warning in case of failure
 
