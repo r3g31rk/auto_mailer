@@ -104,7 +104,7 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     options.set_preference('general.useragent.override', UserAgent().random)
     options.headless = False  # Modify this value to see/hide what is going on
     current_working_dir = os.path.abspath(os.path.dirname(__file__))
-    driver_path = os.path.abspath(os.path.join(current_working_dir, '../resources/driver/geckodriver.exe'))
+    driver_path = os.path.abspath(os.path.join(current_working_dir, 'geckodriver.exe'))
     service = Service(driver_path)
     driver = webdriver.Firefox(service=service, options=options)
 
@@ -151,17 +151,12 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
 if __name__ == '__main__':
     # Creating the various relative path from current working directory where inputs can be fetched
     print('Creating the various relative path from current working directory where inputs can be fetched')
-    cwd = os.path.abspath(os.path.dirname(__file__))
-    receivers_path1 = os.path.abspath(os.path.join(cwd, 'receivers.txt'))
-    receivers_path = os.path.abspath(os.path.join(cwd, '../inputs/receivers.txt'))
-    senders_path = os.path.abspath(os.path.join(cwd, '../inputs/credentials.txt'))
-    mails_path = os.path.abspath(os.path.join(cwd, '../inputs/emails'))
+    mails_path = os.path.abspath(os.path.dirname(__file__))
+    receivers_path = os.path.abspath(os.path.join(mails_path, 'receivers.md'))
+    senders_path = os.path.abspath(os.path.join(mails_path, 'credentials.md'))
 
     # Getting information from the inputs
     print('Getting information from the inputs')
-    receivers1 = get_receivers(receivers_path1)
-    print(receivers1)
-    sys.exit(84)
     senders = get_senders(senders_path)
     receivers = get_receivers(receivers_path)
     mails = get_mails(mails_path)
