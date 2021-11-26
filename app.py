@@ -6,13 +6,13 @@
 ######################################################
 
 
-import os, sys
+import os
+import sys
 from time import sleep
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from fake_useragent import UserAgent
 from random import randint, choice
 
@@ -20,6 +20,20 @@ from random import randint, choice
 #############################################################
 # FUNCTIONS & TOOLS
 #############################################################
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS,
+        # and places our data files in a folder relative to that temp
+        # folder named as specified in the datas tuple in the spec file
+        base_path = os.path.join(sys._MEIPASS, 'data')
+    except Exception:
+        # sys._MEIPASS is not defined, so use the original path
+        base_path = 'C:\\Users\\test\\Downloads\\TripApp'
+
+    return os.path.join(base_path, relative_path)
+
+
 def read_file(filepath: str) -> str:
     """
     Function taking a filepath as an argument an returning its content as a string
@@ -103,8 +117,8 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     options.set_preference('permissions.default.image', 2)
     options.set_preference('general.useragent.override', UserAgent().random)
     options.headless = False  # Modify this value to see/hide what is going on
-    current_working_dir = os.path.abspath(os.path.dirname(__file__))
-    driver_path = os.path.abspath(os.path.join(current_working_dir, 'geckodriver.exe'))
+    driver_path = resource_path(os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'geckodriver.exe')))
+    # driver_path = 'geckodriver.exe'
     service = Service(driver_path)
     driver = webdriver.Firefox(service=service, options=options)
 
@@ -113,31 +127,31 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     random_sleep_time(5)
 
     # Filling the fields
-    driver.find_element_by_id('username').clear()
-    driver.find_element_by_id('username').send_keys(username)
+    driver.find_element(By.ID, 'username').clear()
+    driver.find_element(By.ID, 'username').send_keys(username)
     random_sleep_time(2)
-    driver.find_element_by_id('password').clear()
-    driver.find_element_by_id('password').send_keys(secret)
+    driver.find_element(By.ID, 'password').clear()
+    driver.find_element(By.ID, 'password').send_keys(secret)
     random_sleep_time(3)
-    driver.find_element_by_xpath("//button[@type='submit']").click()
+    driver.find_element(By.XPATH, "//button[@type='submit']").click()
     random_sleep_time(20)
 
-    driver.find_element_by_tag_name('body').send_keys('n')
+    driver.find_element(By.TAG_NAME, 'body').send_keys('n')
     random_sleep_time(2)
-    driver.find_element_by_xpath("//input[@type='text' and @data-testid='composer:to']").send_keys(recipient)
+    driver.find_element(By.XPATH, "//input[@type='text' and @data-testid='composer:to']").send_keys(recipient)
     random_sleep_time(2)
-    driver.find_element_by_xpath("//input[@type='text' and @data-testid='composer:subject']").send_keys(about)
+    driver.find_element(By.XPATH, "//input[@type='text' and @data-testid='composer:subject']").send_keys(about)
     random_sleep_time(2)
 
     # did not found another way than "manually" going to the next MESSAGE field with the TAB key
-    driver.find_element_by_tag_name('body').send_keys(Keys.TAB)
-    driver.find_element_by_tag_name('body').send_keys(Keys.TAB)
-    driver.find_element_by_tag_name('body').send_keys(text)
+    driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.TAB)
+    driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.TAB)
+    driver.find_element(By.TAG_NAME, 'body').send_keys(text)
     random_sleep_time(5)
 
     # did not found another way than "manually" going to the next MESSAGE field with the TAB key
-    driver.find_element_by_tag_name('body').send_keys(Keys.TAB)
-    driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.ENTER)
+    driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.TAB)
+    driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.CONTROL + Keys.ENTER)
     random_sleep_time(20)
 
     # CLOSING
@@ -151,16 +165,15 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
 if __name__ == '__main__':
     # Creating the various relative path from current working directory where inputs can be fetched
     print('Creating the various relative path from current working directory where inputs can be fetched')
-    mails_path = os.path.abspath(os.path.dirname(__file__))
-    receivers_path = os.path.abspath(os.path.join(mails_path, 'receivers.md'))
-    senders_path = os.path.abspath(os.path.join(mails_path, 'credentials.md'))
+    mails_path = resource_path(os.path.abspath(os.path.dirname(__file__)))
+    receivers_path = resource_path(os.path.abspath(os.path.join(mails_path, 'receivers.md')))
+    senders_path = resource_path(os.path.abspath(os.path.join(mails_path, 'credentials.md')))
 
     # Getting information from the inputs
     print('Getting information from the inputs')
     senders = get_senders(senders_path)
     receivers = get_receivers(receivers_path)
     mails = get_mails(mails_path)
-
     # Looping through each receiver provided to sent every mail provided
     print('Looping through each receiver provided to sent every mail provided')
     for receiver in receivers:
