@@ -132,7 +132,6 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     random_sleep_time(3)
     driver.find_element(By.XPATH, "//button[@type='submit']").click()
     random_sleep_time(20)
-
     driver.find_element(By.TAG_NAME, 'body').send_keys('n')
     random_sleep_time(2)
     driver.find_element(By.XPATH, "//input[@type='text' and @data-testid='composer:to']").send_keys(recipient)
@@ -146,12 +145,12 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     driver.find_element(By.TAG_NAME, 'body').send_keys(text)
     random_sleep_time(5)
 
-    # I think I used a protonmail shortcut to send the mail here, probably CTR+ENTER
+    # did not found another way than "manually" going to the next SEND button (from the MESSAGE filed) with the TAB key
     driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.TAB)
     driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.CONTROL + Keys.ENTER)
     random_sleep_time(20)
 
-    # CLOSING
+    # closing
     driver.quit()
     return 0
 
@@ -176,8 +175,8 @@ if __name__ == '__main__':
             print('#' * 42 + f'\nMAIL SENT from:{login}\tto:{receiver}\tabout:{subject}\n{message}\n' + '#' * 42)
 
     # Cleaning
-    # os.remove('geckodriver.log')
-    print('shutting down')
+    pathlib.Path.cwd().joinpath('geckodriver.log').unlink()
+    print('Cleaning and shutting down')
 
     # TODO: logging and/or reporting and/or warning in case of failure
 

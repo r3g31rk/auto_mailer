@@ -4,25 +4,27 @@ Automated email sender (from a protonmail account only) built with Python
 
 # Requirements
 
-- you need some python libs, and it easier to install them with pip
-    - what I did on LInux:
-    ```commandline
-    sudo pip3 install selenium fake-useragent
-    ```
-    - what I did on Windows:
-    ```commandline
-    py -m pip install selenium fake-useragent
-    ```
+- To use the **application** `app.exe` (recommended usage), there is NO requirements 
 
-**Nota bene: These are probably not the proper ways of doing it, but it get the job done!**
+- To use the **script** `app.py` (for dev purpose), you need some python libs  
+
+    - what I did on Ubuntu: `sudo pip3 install selenium fake-useragent` 
+  
+    - what I did on Windows10: `py -m pip install selenium fake-useragent`
+  
+  **Nota bene: These are probably not the proper ways of doing it, but it get the job done!**
+
 
 
 ## Usage
-TLDR: Each **txt** file will be sent to each address in `recipients.md` using a random address from `credentials.md`.  
+TLDR:    
+- using a random pair of credentials provided in `inputs/from.txt` 
+- each **txt** file provided in `inputs/messages` 
+- will be sent to each account provided in `inputs/to.txt`
 
 ## Step 1: Configure your inputs
 
-### From who
+### FROM who
 - Create a file named `from.txt` inside the folder `inputs`
 - Write inside the account[s] **FROM** which you want to send some email[s]:  
   - Two values _login;password_ per line, separated by a semicolon `;`.  
@@ -38,7 +40,7 @@ a rule in the `.gitignore` file **will prevent to expose publicly your credentia
 **only protonmail accounts** can be used (for now) to send email **FROM**
 
 
-### TO WHO
+### TO who
 - Create a file named `to.txt` inside the folder `inputs`
 - Write inside the account[s] **TO** which you want to send some email[s]: 
   - One email address per line.  
@@ -52,12 +54,12 @@ a rule in the `.gitignore` file **will prevent to expose publicly your credentia
 > The program will use **every one** of the provided account[s] contained in `to.txt`  
 **Any** mail account can be used to send email **TO**
 
-### ABOUT WHAT
-- Put your email[s] in `inputs/message`, as **txt** file[s]:  
+### ABOUT what
+- Put your email[s] in `inputs/messages`, as **txt** file[s]:  
   - The **name** of each text file (without the `.txt` extension) will be used as the email **subject**.  
   - The **content** of each text file will be used as the email **message**.  
 
-> The program will sent **every txt file** provided in `inputs/message`
+> The program will sent **every txt file** provided in `inputs/messages`
 
 
 
