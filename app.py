@@ -5,7 +5,7 @@
 # mailingSelenium
 ######################################################
 
-
+import pathlib
 import os
 import sys
 from time import sleep
@@ -34,19 +34,9 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-def read_file(filepath: str) -> str:
-    """
-    Function taking a filepath as an argument an returning its content as a string
-    :param filepath: path of the file to read
-    :return: a string
-    """
-    with open(filepath, 'r') as f:
-        return f.read()
-
-
-def get_senders(filepath: str) -> dict:
+def get_senders(filepath: pathlib.Path) -> dict:
     res = {}
-    with open(filepath, 'r') as f:
+    with filepath.open(mode='r') as f:
         for line in f:
             dd = line.strip().split(';', 1)
             k, v = dd[0], dd[-1]
@@ -54,23 +44,30 @@ def get_senders(filepath: str) -> dict:
     return res
 
 
-def get_receivers(filepath: str) -> list:
+def get_receivers(filepath: pathlib.Path) -> list:
     res = []
-    with open(filepath, 'r') as f:
+    with filepath.open(mode='r') as f:
         for line in f:
             res.append(line.strip())
     return res
 
 
-def get_mails(folder: str) -> list:
+def read_file(filepath: pathlib.Path) -> str:
+    """
+    Function taking a filepath as an argument an returning its content as a string
+    :param filepath: path of the file to read
+    :return: a string
+    """
+    with filepath.open(mode='r') as f:
+        return f.read()
+
+
+def get_mails(folder_path: pathlib.Path) -> list:
     res = []
-    # Change the directory
-    os.chdir(folder)
+    messages = folder_path.glob('*.txt')
     # iterate through all files
-    for file in os.listdir():
-        # Check whether file is in text format or not
-        if file.endswith(".txt"):
-            res.append((file[:-4], read_file(file)))
+    for message in messages:
+        res.append((message.stem, read_file(message)))
     return res
 
 
@@ -117,9 +114,8 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     options.set_preference('permissions.default.image', 2)
     options.set_preference('general.useragent.override', UserAgent().random)
     options.headless = False  # Modify this value to see/hide what is going on
-    driver_path = resource_path(os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'geckodriver.exe')))
-    # driver_path = 'geckodriver.exe'
-    service = Service(driver_path)
+    driver_path = pathlib.Path.cwd().joinpath('driver', 'geckodriver.exe')
+    service = Service(driver_path.as_posix())
     driver = webdriver.Firefox(service=service, options=options)
 
     # Connecting to the provided protonmail account
@@ -163,24 +159,19 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
 # MAIN PROGRAM
 #############################################################
 if __name__ == '__main__':
-    # Creating the various relative path from current working directory where inputs can be fetched
-    print('Creating the various relative path from current working directory where inputs can be fetched')
-    mails_path = resource_path(os.path.abspath(os.path.dirname(__file__)))
-    receivers_path = resource_path(os.path.abspath(os.path.join(mails_path, 'receivers.md')))
-    senders_path = resource_path(os.path.abspath(os.path.join(mails_path, 'credentials.md')))
-
     # Getting information from the inputs
-    print('Getting information from the inputs')
-    senders = get_senders(senders_path)
-    receivers = get_receivers(receivers_path)
-    mails = get_mails(mails_path)
+    print('Gathering inputs info')
+    senders = get_senders(pathlib.Path.cwd().joinpath('inputs', 'from.txt'))
+    receivers = get_receivers(pathlib.Path.cwd().joinpath('inputs', 'to.txt'))
+    mails = get_mails(pathlib.Path.cwd().joinpath('inputs', 'messages'))
+
     # Looping through each receiver provided to sent every mail provided
     print('Looping through each receiver provided to sent every mail provided')
     for receiver in receivers:
         login, password = choice(list(senders.items()))
         for mail in mails:
             subject, message = mail[0], mail[1]
-            send_protonmail(login, password, receiver, subject, message)
+            # send_protonmail(login, password, receiver, subject, message)
             print('#' * 42 + f'\nMAIL SENT from:{login}\tto:{receiver}\tabout:{subject}\n{message}\n' + '#' * 42)
 
     # Cleaning
