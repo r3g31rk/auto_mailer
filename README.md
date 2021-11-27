@@ -18,7 +18,7 @@ Automated email sender (from a protonmail account only) built with Python
 
 ## Usage
 TLDR:    
-- using a random pair of credentials provided in `inputs/from.txt` 
+- using each time a random pair of credentials provided in `inputs/from.txt` 
 - each **txt** file provided in `inputs/messages` 
 - will be sent to each account provided in `inputs/to.txt`
 

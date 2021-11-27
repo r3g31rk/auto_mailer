@@ -64,10 +64,9 @@ def read_file(filepath: pathlib.Path) -> str:
 
 def get_mails(folder_path: pathlib.Path) -> list:
     res = []
-    messages = folder_path.glob('*.txt')
     # iterate through all files
-    for message in messages:
-        res.append((message.stem, read_file(message)))
+    for m in folder_path.glob('*.txt'):
+        res.append((m.stem, read_file(m)))
     return res
 
 
