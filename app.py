@@ -171,7 +171,7 @@ if __name__ == '__main__':
         login, password = choice(list(senders.items()))
         for mail in mails:
             subject, message = mail[0], mail[1]
-            # send_protonmail(login, password, receiver, subject, message)
+            send_protonmail(login, password, receiver, subject, message)
             print('#' * 42 + f'\nMAIL SENT from:{login}\tto:{receiver}\tabout:{subject}\n{message}\n' + '#' * 42)
 
     # Cleaning
