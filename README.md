@@ -20,42 +20,44 @@ Automated email sender (from a protonmail account only) built with Python
 ## Usage
 TLDR: Each **txt** file will be sent to each address in `recipients.md` using a random address from `credentials.md`.  
 
-## Step 1: configuring your inputs
+## Step 1: Configure your inputs
 
-### FROM WHO
-- You must CREATE a file named `credentials.md`, containing the account[s] **FROM** which you want to send some email[s].  
-- Two values _login;password_ per line, separated by a semicolon `;`.  
-- The program will randomly used one of the provided account to send the emails.  
-- Provide only one account credntials if you do not want randomness.  
-- Your file should look like something like this:
-    ```text
-    my_email@protonmail.com;admin1234
-    my_second_email@protonmail.com;PreviousPasswordWasWeakButNotLIkeJohn
-    a_third_email_I_created_for_the_occasion@protonmail.com;c0mpl!c4t"dPasswordWith$tr4ngeCharacters!§
-    ```
+### From who
+- Create a file named `from.txt` inside the folder `inputs`
+- Write inside the account[s] **FROM** which you want to send some email[s]:  
+  - Two values _login;password_ per line, separated by a semicolon `;`.  
+  - Your file should look like something like this:
+      ```text
+      my_email@protonmail.com;admin1234
+      my_second_email@protonmail.com;PreviousPasswordWasWeakButNotLikeJohn
+      another_of_my_accounts@protonmail.com;stup1dPassw0rd
+      ```
 
-**a rule in the `.gitignore` file will prevent to expose publicly your created**
-**ONLY protonmail ACCOUNTS CAN BE USED TO SEND EMAIL FROM** (for now)
-
+> The program will **randomly** use one of the provided account[s] contained in `from.txt`  
+a rule in the `.gitignore` file **will prevent to expose publicly your credentials**  
+**only protonmail accounts** can be used (for now) to send email **FROM**
 
 
 ### TO WHO
-- You must provide, inside the file `recipients.md`, the account[s] **TO** which you want to send some email[s]. 
-- One email address per line.  
-- Your file should look like something like this:  
-    ```markdown
-    mickey@gmail.com
-    zorro.kicks.ass@yahoo.be
-    dalai_lama@protonmail.com
-    zorro@yandex.ru
-    ```
+- Create a file named `to.txt` inside the folder `inputs`
+- Write inside the account[s] **TO** which you want to send some email[s]: 
+  - One email address per line.  
+  - Your file should look like something like this:  
+      ```markdown
+      mickey@gmail.com
+      zorro.kicks.ass@yahoo.be
+      dalai_lama@protonmail.com
+      zorro@yandex.ru
+      ```
+> The program will use **every one** of the provided account[s] contained in `to.txt`  
+**Any** mail account can be used to send email **TO**
 
 ### ABOUT WHAT
-- All other **txt** file[s] contained in this folder will be sent as email[s], considering the following rules:  
-- The **name** (without the `.txt` extension) of each text file will be used as the email **subject**.  
-- The **content** of each text file will be used as the email **message**.  
-- Each text file will be sent to EACH recipient from `recipients.md` 
+- Put your email[s] in `inputs/message`, as **txt** file[s]:  
+  - The **name** of each text file (without the `.txt` extension) will be used as the email **subject**.  
+  - The **content** of each text file will be used as the email **message**.  
 
+> The program will sent **every txt file** provided in `inputs/message`
 
 
 
