@@ -117,6 +117,7 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     driver_path = pathlib.Path.cwd().joinpath('driver', 'geckodriver.exe')
     service = Service(driver_path.as_posix())
     driver = webdriver.Firefox(service=service, options=options)
+    # TODO: put this part above in another prepare_browser function
 
     # Connecting to the provided protonmail account
     driver.get("https://account.protonmail.com/login")
@@ -145,7 +146,7 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     driver.find_element(By.TAG_NAME, 'body').send_keys(text)
     random_sleep_time(5)
 
-    # did not found another way than "manually" going to the next MESSAGE field with the TAB key
+    # I think I used a protonmail shortcut to send the mail here, probably CTR+ENTER
     driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.TAB)
     driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.CONTROL + Keys.ENTER)
     random_sleep_time(20)
