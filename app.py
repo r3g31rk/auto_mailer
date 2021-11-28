@@ -6,7 +6,6 @@
 ######################################################
 
 import pathlib
-import sys
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -68,7 +67,7 @@ def random_sleep_time(n: int):
     # print(f'I had a nap of {nap} seconds')
 
 
-def driver_setup(driver_path: pathlib.Path, headless_mode: bool) -> webdriver:
+def driver_setup(driver_path: pathlib.Path, headless_mode: bool = True) -> webdriver:
     """
     Function to setup the driver of the selenium headless browser
     :param driver_path: the path to the geckodriver.exe file
@@ -97,7 +96,7 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     """
 
     # Preparing the browser
-    driver = driver_setup(pathlib.Path.cwd().joinpath('driver', 'geckodriver.exe'), False)
+    driver = driver_setup(pathlib.Path.cwd().joinpath('driver', 'geckodriver.exe'))
 
     # Connecting to the provided protonmail account
     driver.get("https://account.protonmail.com/login")
@@ -144,7 +143,8 @@ if __name__ == '__main__':
     senders = get_senders(pathlib.Path.cwd().joinpath('inputs', 'from.txt'))
     receivers = get_receivers(pathlib.Path.cwd().joinpath('inputs', 'to.txt'))
     mails = get_mails(pathlib.Path.cwd().joinpath('inputs', 'messages'))
-    print(f'---> {len(mails)} email(s) will be sent TO {len(receivers)} account(s) taking {len(mails) * len(receivers) * 1.2} minute(s)')
+    print(
+        f'---> {len(mails)} email(s) will be sent TO {len(receivers)} account(s) taking {len(mails) * len(receivers) * 1.2} minute(s)')
     # Looping through each receiver provided to sent every mail provided
     print('Looping through each receiver provided to sent every mail provided')
     for receiver in receivers:
