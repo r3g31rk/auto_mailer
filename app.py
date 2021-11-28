@@ -6,7 +6,6 @@
 ######################################################
 
 import pathlib
-import os
 import sys
 from time import sleep
 from selenium import webdriver
@@ -20,20 +19,6 @@ from random import randint, choice
 #############################################################
 # FUNCTIONS & TOOLS
 #############################################################
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS,
-        # and places our data files in a folder relative to that temp
-        # folder named as specified in the datas tuple in the spec file
-        base_path = os.path.join(sys._MEIPASS, 'data')
-    except Exception:
-        # sys._MEIPASS is not defined, so use the original path
-        base_path = 'C:\\Users\\test\\Downloads\\TripApp'
-
-    return os.path.join(base_path, relative_path)
-
-
 def get_senders(filepath: pathlib.Path) -> dict:
     res = {}
     with filepath.open(mode='r') as f:
@@ -83,16 +68,21 @@ def random_sleep_time(n: int):
     # print(f'I had a nap of {nap} seconds')
 
 
-def browser_set_profile(pf, preferences: dict):
+def driver_setup(driver_path: pathlib.Path, headless_mode: bool) -> webdriver:
     """
-    Function to ease configuraiton of the selenium borwser's preferences
-    :param pf: a virgin selenium webrowser profile
-    :param preferences: dict with  configuration keys and values
-    :return: a configured selenium webrowser profile
+    Function to setup the driver of the selenium headless browser
+    :param driver_path: the path to the geckodriver.exe file
+    :param headless_mode: True (False) if you want to hide (see) what's going on
+    :return: a selenium webdriver object
     """
-    for k, v in preferences.items():
-        pf.set_preference(k, v)
-    return pf
+    options = webdriver.FirefoxOptions()
+    options.set_preference("http.response.timeout", 10)
+    options.set_preference('dom.max_script_run_time', 10)
+    options.set_preference('permissions.default.image', 2)
+    options.set_preference('general.useragent.override', UserAgent().random)
+    options.headless = headless_mode
+    service = Service(driver_path.as_posix())
+    return webdriver.Firefox(service=service, options=options)
 
 
 def send_protonmail(username: str, secret: str, recipient: str, about: str, text: str) -> int:
@@ -107,16 +97,7 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     """
 
     # Preparing the browser
-    options = webdriver.FirefoxOptions()
-    options.set_preference("http.response.timeout", 10)
-    options.set_preference('dom.max_script_run_time', 10)
-    options.set_preference('permissions.default.image', 2)
-    options.set_preference('general.useragent.override', UserAgent().random)
-    options.headless = False  # Modify this value to see/hide what is going on
-    driver_path = pathlib.Path.cwd().joinpath('driver', 'geckodriver.exe')
-    service = Service(driver_path.as_posix())
-    driver = webdriver.Firefox(service=service, options=options)
-    # TODO: put this part above in another prepare_browser function
+    driver = driver_setup(pathlib.Path.cwd().joinpath('driver', 'geckodriver.exe'), False)
 
     # Connecting to the provided protonmail account
     driver.get("https://account.protonmail.com/login")
@@ -142,12 +123,12 @@ def send_protonmail(username: str, secret: str, recipient: str, about: str, text
     driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.TAB)
     driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.TAB)
     driver.find_element(By.TAG_NAME, 'body').send_keys(text)
-    random_sleep_time(5)
+    random_sleep_time(3)
 
     # did not found another way than "manually" going to the next SEND button (from the MESSAGE filed) with the TAB key
     driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.TAB)
     driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.CONTROL + Keys.ENTER)
-    random_sleep_time(20)
+    random_sleep_time(5)
 
     # closing
     driver.quit()
@@ -163,7 +144,7 @@ if __name__ == '__main__':
     senders = get_senders(pathlib.Path.cwd().joinpath('inputs', 'from.txt'))
     receivers = get_receivers(pathlib.Path.cwd().joinpath('inputs', 'to.txt'))
     mails = get_mails(pathlib.Path.cwd().joinpath('inputs', 'messages'))
-
+    print(f'---> {len(mails)} email(s) will be sent TO {len(receivers)} account(s) taking {len(mails) * len(receivers) * 1.2} minute(s)')
     # Looping through each receiver provided to sent every mail provided
     print('Looping through each receiver provided to sent every mail provided')
     for receiver in receivers:
@@ -171,13 +152,10 @@ if __name__ == '__main__':
         for mail in mails:
             subject, message = mail[0], mail[1]
             send_protonmail(login, password, receiver, subject, message)
-            print('#' * 42 + f'\nMAIL SENT from:{login}\tto:{receiver}\tabout:{subject}\n{message}\n' + '#' * 42)
+            print('#' * 42 + f'\nMAIL SENT from:{login}\tto:{receiver}\tabout:{subject}\n' + '#' * 42)
 
     # Cleaning
     pathlib.Path.cwd().joinpath('geckodriver.log').unlink()
     print('Cleaning and shutting down')
 
-    # TODO: logging and/or reporting and/or warning in case of failure
-
-# TODO: package it/ freeze it to use from windows
 # TODO: cook the recipes for mailing with gmail which should be the most used**
